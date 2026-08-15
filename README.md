@@ -135,19 +135,3 @@ A full run typically produces the following state fields:
 | `final_report`     | Final research report                               |
 
 Sample reports are available in `results/`.
-
-## Development Checks
-
-Run a basic syntax check:
-
-```powershell
-python -m compileall deep_research
-```
-
-Check configuration loading and date formatting:
-
-```powershell
-python -c "from deep_research.utils import get_today_str; print(get_today_str())"
-```
-
-A full Agent run requires a working OpenAI-compatible model service, a valid Tavily API key, and network access. Local syntax checks do not require live API credentials
