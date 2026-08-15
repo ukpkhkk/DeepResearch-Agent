@@ -150,11 +150,4 @@ Check configuration loading and date formatting:
 python -c "from deep_research.utils import get_today_str; print(get_today_str())"
 ```
 
-A full Agent run requires a working OpenAI-compatible model service, a valid Tavily API key, and network access. Local syntax checks do not require live API credentials.
-
-## Current Boundaries
-
-- The project is optimized for Chinese deep research tasks, and most prompts are written in Chinese.
-- Search quality and final report quality depend on the external search service and the configured models.
-- Skill Memory stores process knowledge, not verified long-term facts.
-- The default example uses an in-memory LangGraph checkpointer. Production deployments should replace it with a persistent checkpointer or external state store.
+A full Agent run requires a working OpenAI-compatible model service, a valid Tavily API key, and network access. Local syntax checks do not require live API credentials
