@@ -67,9 +67,11 @@ skill_memory:
     similarity_threshold: 0.35
 ```
 
-## Environment Setup
+## Quick Start
 
-Python 3.11+ is recommended.
+The fastest way to run the project is to use the existing `config.yml`, replace the placeholder credentials and model names, then launch the LangGraph agent from a notebook or a short Python script. Python 3.11 is recommended.
+
+### 1. Install Dependencies
 
 ```powershell
 python -m venv .venv
@@ -77,13 +79,23 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Install Chroma if you want persistent vector storage for Skill Memory:
+Optional, but recommended if you want persistent Skill Memory:
 
 ```powershell
 pip install chromadb
 ```
 
-Configure the OpenAI-compatible model service and Tavily search service in `config.yml`:
+### 2. Configure Runtime Services
+
+Add your own `config.yml` and set:
+
+- `stages.prod.cognition.openai.base_url`
+- `stages.prod.cognition.openai.api_key`
+- `stages.prod.cognition.openai.default_model`
+- `stages.prod.search.tavily.api_key`
+- every `stages.prod.roles.<role>.handle`
+
+like below:
 
 ```yaml
 stages:
@@ -113,13 +125,75 @@ stages:
 
 Optional environment variables:
 
-| Variable                    | Purpose                                                     |
+| Variable                    | SPurpose                                                    |
 | --------------------------- | ----------------------------------------------------------- |
 | `CONFIG_PATH`             | Path to the configuration file, defaulting to`config.yml` |
 | `STAGE`                   | Configuration stage, defaulting to`prod`                  |
-| `DEEP_RESEARCH_LOG_LEVEL` | Runtime log level                                           |
+| `DEEP_RESEARCH_LOG_LEVEL` | Runtime log levelS                                          |
 
-### Outputs
+### 3. Verify Local Imports
+
+This check does not call external APIs:
+
+```powershell
+python -m compileall deep_research
+```
+
+You can also verify that the config loader and date utility work:
+
+```powershell
+python -c "from deep_research.utils import get_today_str; print(get_today_str())"
+```
+
+### 4. Run with Notebook
+
+```powershell
+jupyter notebook run.ipynb
+```
+
+Open `run.ipynb`, run the setup cells, and execute the final `ainvoke` cell. This is the recommended debugging path because the notebook prints intermediate status and renders the final report with Markdown.
+
+### 5. Run with Python
+
+Use this PowerShell command for a minimal end-to-end run:
+
+```powershell
+@'
+import asyncio
+
+from langchain_core.messages import HumanMessage
+from langgraph.checkpoint.memory import InMemorySaver
+
+from deep_research.agent_builder import deep_researcher_builder
+
+
+async def main():
+    agent = deep_researcher_builder.compile(checkpointer=InMemorySaver())
+    result = await agent.ainvoke(
+        {
+            "messages": [
+                HumanMessage(
+                    content="Please research how agent memory is designed in modern deep research systems and write a structured report."
+                )
+            ]
+        },
+        config={
+            "configurable": {
+                "thread_id": "quickstart-demo",
+            },
+            "recursion_limit": 50,
+        },
+    )
+    print(result["final_report"])
+
+
+asyncio.run(main())
+'@ | python -
+```
+
+If the run succeeds, the generated report is printed to stdout. If Skill Memory is enabled, high-quality trajectories are persisted under `deep_research/_skill_memory/` by default.
+
+## Outputs
 
 A full run typically produces the following state fields:
 
