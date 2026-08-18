@@ -1,4 +1,15 @@
-# Deep Research Agent
+<div align="center">
+
+<h1>Deep Research Agent</h1>
+<p>
+  <a href="https://www.python.org/"><img alt="Python 3.11+" src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat&logo=python&logoColor=white"></a>
+  <a href="https://github.com/langchain-ai/langgraph"><img alt="LangGraph 1.0.5+" src="https://img.shields.io/badge/LangGraph-1.0.5%2B-1C3C3C?style=flat"></a>
+  <a href="https://www.langchain.com/"><img alt="LangChain 1.2.0+" src="https://img.shields.io/badge/LangChain-1.2.0%2B-1C3C3C?style=flat"></a>
+  <a href="https://docs.pydantic.dev/"><img alt="Pydantic 2.12.5+" src="https://img.shields.io/badge/Pydantic-2.12.5%2B-E92063?style=flat"></a>
+  <a href="https://github.com/tavily-ai/tavily-python"><img alt="Tavily Python 0.7.17+" src="https://img.shields.io/badge/Tavily%20Python-0.7.17%2B-00A67E?style=flat"></a>
+  <a href="https://www.trychroma.com/"><img alt="Chroma optional" src="https://img.shields.io/badge/Chroma-optional-5B5BD6?style=flat"></a>
+</p>
+</div>
 
 A LangGraph / LangChain based multi-agent research system for complex open-ended research tasks. The project automates the full workflow from research brief generation, draft report writing, parallel web search, long-context webpage summarization, Supervisor-driven iterative planning, quality evaluation, Red Team critique, final report generation, and high-quality trajectory distillation into reusable Skill Memory.
 
