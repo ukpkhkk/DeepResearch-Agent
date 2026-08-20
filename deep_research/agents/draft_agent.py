@@ -12,13 +12,11 @@
 """
 
 import os
-from typing_extensions import Literal
 from rich.markdown import Markdown
 from rich.console import Console
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, get_buffer_string
 from langgraph.graph import StateGraph, START, END
-from langgraph.types import Command
 
 from deep_research import logging as dr_logging
 from deep_research.llm import get_chat_model
@@ -36,7 +34,7 @@ draft_model = get_chat_model("draft")
 
 # ===== Langgraph的节点 =====
 
-def write_research_brief(state: AgentState) -> Command[Literal["write_draft_report"]]:
+def write_research_brief(state: AgentState) -> dict:
     """根据用户的query生成一个研究提纲，内容包含需要调研哪些方面，注意事项等等"""
 
     logger.debug(
@@ -56,12 +54,9 @@ def write_research_brief(state: AgentState) -> Command[Literal["write_draft_repo
     logger.debug("write_research_brief produced research_brief length=%d", len(response.research_brief))
 
     # 更新Messages并回传给主agent 
-    return Command(
-            goto="write_draft_report", 
-            update={"research_brief": response.research_brief}
-        )
+    return {"research_brief": response.research_brief}
 
-def write_draft_report(state: AgentState) -> Command[Literal["__end__"]]:
+def write_draft_report(state: AgentState) -> dict:
     """生成提纲生成一个研究报告的草稿"""
 
     logger.debug(
@@ -87,7 +82,6 @@ def write_draft_report(state: AgentState) -> Command[Literal["__end__"]]:
     logger.debug("write_draft_report produced draft_report length=%d", len(response.draft_report))
 
     return {
-        "research_brief": research_brief,
         "draft_report": response.draft_report, 
         "initial_draft_report": response.draft_report,
         "supervisor_messages": ["Here is the draft report: " + response.draft_report, research_brief]
@@ -114,7 +108,7 @@ if __name__ == "__main__":
     print(draft_agent.get_graph().draw_ascii())
 
     # 测试问题
-    thread = {"configurable": {"thread_id": "1", "recursion_limit": 50}}
+    thread = {"configurable": {"thread_id": "1"}, "recursion_limit": 50}
     result = draft_agent.invoke({"messages": [HumanMessage(content="帮我写一个关于英伟达最新GPU的调研报告")]}, config=thread)
 
     # 输出

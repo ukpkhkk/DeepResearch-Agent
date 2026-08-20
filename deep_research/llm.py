@@ -70,6 +70,9 @@ def _build_openai_kwargs(
         if api_cfg.get(key):
             kwargs[key] = api_cfg[key]
 
+    if api_cfg.get("extra_body"):
+        kwargs["extra_body"] = api_cfg["extra_body"]
+
     # 温度系数
     if api_cfg.get("temperature") is not None:
         kwargs["temperature"] = api_cfg["temperature"]

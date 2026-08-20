@@ -182,18 +182,9 @@ async def supervisor_tools(state: SupervisorState) -> Command[Literal["superviso
 
         # 我们返回一个END来结束这个子图，并将最后的notes传递给supervisor。
         return Command(
-                goto=END,
-                update={
-                    "notes": final_notes,
-                    "research_brief": state.get("research_brief", ""),
-                    "draft_report": state.get("draft_report", ""),
-                    "raw_notes": state.get("raw_notes", []),
-                    "active_critiques": state.get("active_critiques", []),
-                    "quality_history": state.get("quality_history", []),
-                    "research_task_history": state.get("research_task_history", []),
-                    "refine_history": state.get("refine_history", []),
-                    "retrieved_skill_ids": state.get("retrieved_skill_ids", []),
-        })
+            goto=END,
+            update={"notes": final_notes},
+        )
 
     else:
         # 初始化变量
@@ -350,17 +341,7 @@ async def supervisor_tools(state: SupervisorState) -> Command[Literal["superviso
         except Exception as e:
             return Command(
                 goto=END,
-                update={
-                    "notes": get_notes_from_tool_calls(supervisor_messages),
-                    "research_brief": state.get("research_brief", ""),
-                    "draft_report": state.get("draft_report", ""),
-                    "raw_notes": state.get("raw_notes", []),
-                    "active_critiques": state.get("active_critiques", []),
-                    "quality_history": state.get("quality_history", []),
-                    "research_task_history": state.get("research_task_history", []),
-                    "refine_history": state.get("refine_history", []),
-                    "retrieved_skill_ids": state.get("retrieved_skill_ids", []),
-                }
+                update={"notes": get_notes_from_tool_calls(supervisor_messages)},
             )
 
 
@@ -373,7 +354,6 @@ supervisor_builder.add_node("supervisor_tools", supervisor_tools)
 supervisor_builder.add_node("red_team", red_team_node)
 
 supervisor_builder.add_edge(START, "supervisor")
-supervisor_builder.add_edge("supervisor", "supervisor_tools")
 supervisor_builder.add_edge("red_team", "supervisor")
 
 supervisor_agent = supervisor_builder.compile()
